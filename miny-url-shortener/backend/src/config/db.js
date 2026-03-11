@@ -34,9 +34,6 @@ export async function initDB() {
             );
         `)
 
-        await client.query(`
-            CREATE INDEX IF NOT EXISTS idx_short_code ON urls(short_code);
-        `)
 
         await client.query(`
             CREATE TABLE IF NOT EXISTS click_events(
