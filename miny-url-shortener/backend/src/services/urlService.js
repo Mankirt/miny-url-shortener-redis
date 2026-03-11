@@ -38,10 +38,20 @@ export async function createShortUrl(originalUrl, creatorIp) {
     }
 }
 
+function isValidShortCode(code) {
+    const VALID_CHARS = /^[0-9a-zA-Z]+$/
+    return typeof code === 'string' &&
+        VALID_CHARS.test(code) &&
+        code.length >= 1 &&
+        code.length <= 10
+}
+
 export async function resolveUrl(shortCode, meta = {}) {
+    if (!isValidShortCode(shortCode)) return null
+
     const id = decode(shortCode)
     //If someone passes a garbage code, decode might return 0 or negative
-    if (!id || id <= 0) return null
+    if (id < 1) return null
 
     const result = await pool.query(
         `SELECT original_url FROM urls WHERE id = $1`,
@@ -53,8 +63,10 @@ export async function resolveUrl(shortCode, meta = {}) {
 }
 
 export async function getUrlStats(shortCode) {
+    if (!isValidShortCode(shortCode)) return null
+
     const id = decode(shortCode)
-    if (!id || id <= 0) return null
+    if (id < 1) return null
 
     const result = await pool.query(
         `SELECT short_code,original_url, created_at, click_count, creator_ip FROM urls WHERE id = $1`,
@@ -73,8 +85,10 @@ export async function getAllUrls() {
 }
 
 export async function deleteUrl(shortCode) {
+    if (!isValidShortCode(shortCode)) return
+
     const id = decode(shortCode)
-    if (!id || id <= 0) return
+    if (id < 1) return
     await pool.query(
         `DELETE FROM urls WHERE id = $1`,
         [id]
