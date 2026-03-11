@@ -48,6 +48,7 @@ export async function initDB() {
 
     } catch (err) {
         console.error("Error initializing database:", err)
+        throw err
     }
     finally {
         client.release()
@@ -55,3 +56,5 @@ export async function initDB() {
 
 
 }
+
+export default pool
