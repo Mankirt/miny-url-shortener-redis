@@ -1,5 +1,6 @@
 import pool from '../config/db.js';
 import { encode, decode } from './base62.js';
+import { cacheUrl, getCachedUrl, invalidateUrl } from '../config/redis.js';
 
 export async function createShortUrl(originalUrl, creatorIp) {
     const client = await pool.connect()
@@ -26,6 +27,9 @@ export async function createShortUrl(originalUrl, creatorIp) {
         )
         await client.query('COMMIT')
 
+        //Cache the new short code for faster future lookups
+        await cacheUrl(shortCode, originalUrl)
+
         return {
             shortCode, originalUrl, shortUrl: `#{baseUrl}/${shortCode}`
         }
@@ -49,6 +53,13 @@ function isValidShortCode(code) {
 export async function resolveUrl(shortCode, meta = {}) {
     if (!isValidShortCode(shortCode)) return null
 
+    const cached = await getCachedUrl(shortCode)
+    if (cached) {
+        console.log("Cache hit for", shortCode)
+        return cached
+    }
+    console.log("Cache miss for", shortCode)
+
     const id = decode(shortCode)
     //If someone passes a garbage code, decode might return 0 or negative
     if (id < 1) return null
@@ -59,7 +70,11 @@ export async function resolveUrl(shortCode, meta = {}) {
     )
     if (result.rows.length === 0) return null
 
-    return result.rows[0].original_url
+    const originalUrl = result.rows[0].original_url
+    //Cache the result for future requests
+    await cacheUrl(shortCode, originalUrl)
+
+    return originalUrl
 }
 
 export async function getUrlStats(shortCode) {
@@ -93,4 +108,7 @@ export async function deleteUrl(shortCode) {
         `DELETE FROM urls WHERE id = $1`,
         [id]
     )
+
+    // Invalidate cache
+    await invalidateUrl(shortCode)
 }
