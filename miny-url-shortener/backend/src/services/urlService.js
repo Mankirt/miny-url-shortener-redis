@@ -12,8 +12,8 @@ export async function createShortUrl(originalUrl, creatorIp) {
 
         //INSERT and get ID
         const insertResult = await client.query(
-            `INSERT INTO urls (original_url, short_code, creator_ip) VALUES ($1, $2, $3) RETURNING id`,
-            [originalUrl, 'placeholder', creatorIp]
+            `INSERT INTO urls (original_url, creator_ip) VALUES ($1, $2) RETURNING id`,
+            [originalUrl, creatorIp]
         )
         const id = insertResult.rows[0].id
 

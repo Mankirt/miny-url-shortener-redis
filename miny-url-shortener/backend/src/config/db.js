@@ -26,7 +26,7 @@ export async function initDB() {
         await client.query(`
             CREATE TABLE IF NOT EXISTS urls (
                 id SERIAL PRIMARY KEY,
-                short_code VARCHAR(10) UNIQUE NOT NULL,
+                short_code VARCHAR(10) UNIQUE,
                 original_url TEXT NOT NULL,
                 created_at TIMESTAMPTZ DEFAULT NOW(),
                 click_count INTEGER DEFAULT 0,
@@ -41,7 +41,7 @@ export async function initDB() {
                 short_code VARCHAR(10) NOT NULL,
                 clicked_at TIMESTAMP DEFAULT NOW(),
                 referrer TEXT,
-                user_agent TEXT)
+                user_agent TEXT);
                 `)
 
         console.log("Database initialized successfully")
