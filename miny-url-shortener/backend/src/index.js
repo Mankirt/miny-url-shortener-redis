@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import { initDB } from './config/db.js';
 import { connectRedis } from './config/redis.js';
+import { resolveUrl } from './services/urlService.js'
 import urlRoutes from './routes/urls.js'
 
 dotenv.config();
@@ -24,6 +25,14 @@ app.use((req, res, next) => {
 
 app.use('/api', urlRoutes)
 
+app.get('/health', (req, res) => {
+    res.status(200).json({
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+    });
+})
+
 app.get('/:code', async (req, res) => {
     try {
         const { code } = req.params
@@ -40,13 +49,6 @@ app.get('/:code', async (req, res) => {
 }
 )
 
-app.get('/health', (req, res) => {
-    res.status(200).json({
-        status: 'ok',
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime(),
-    });
-})
 
 // If no route is matched, return 404
 app.use((req, res) => {
