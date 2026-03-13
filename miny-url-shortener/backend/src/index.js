@@ -1,10 +1,11 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
-import { initDB } from './config/db.js';
+import pool, { initDB } from './config/db.js';
 import { connectRedis } from './config/redis.js';
 import { resolveUrl } from './services/urlService.js'
 import urlRoutes from './routes/urls.js'
+import { connectProducer, startConsumer } from './config/kafka.js';
 
 dotenv.config();
 
@@ -36,8 +37,16 @@ app.get('/health', (req, res) => {
 app.get('/:code', async (req, res) => {
     try {
         const { code } = req.params
-        if (code === 'favicon.ico') return res.status(204).end()
-        const originalUrl = await resolveUrl(code)
+        if (code === 'favicon.ico') {
+            return res.status(204).end()
+        }
+
+        const meta = {
+            referrer: req.headers['referer'] || null,
+            userAgent: req.headers['user-agent'] || null
+        }
+
+        const originalUrl = await resolveUrl(code, meta)
         if (!originalUrl) {
             return res.status(404).json({ error: 'Short code not found' })
         }
@@ -65,6 +74,8 @@ async function start() {
     try {
         await initDB()
         await connectRedis()
+        await connectProducer()
+        await startConsumer(pool)
         app.listen(PORT, () => {
             console.log(`   Server running on http://localhost:${PORT}`)
             console.log(`   POST   /api/shorten     - create short URL`)

@@ -1,6 +1,7 @@
 import pool from '../config/db.js';
 import { encode, decode } from './base62.js';
 import { cacheUrl, getCachedUrl, invalidateUrl } from '../config/redis.js';
+import { publishClickEvent } from '../config/kafka.js';
 
 export async function createShortUrl(originalUrl, creatorIp) {
     const client = await pool.connect()
@@ -56,6 +57,12 @@ export async function resolveUrl(shortCode, meta = {}) {
     const cached = await getCachedUrl(shortCode)
     if (cached) {
         console.log("Cache hit for", shortCode)
+        // Publish click event to Kafka asynchronously (don't await)
+        publishClickEvent({
+            shortCode,
+            referrer: meta.referrer || null,
+            userAgent: meta.userAgent || null
+        })
         return cached
     }
     console.log("Cache miss for", shortCode)
@@ -74,6 +81,12 @@ export async function resolveUrl(shortCode, meta = {}) {
     //Cache the result for future requests
     await cacheUrl(shortCode, originalUrl)
 
+    //Publish event on cache miss
+    publishClickEvent({
+        shortCode,
+        referrer: meta.referrer || null,
+        userAgent: meta.userAgent || null,
+    })
     return originalUrl
 }
 
