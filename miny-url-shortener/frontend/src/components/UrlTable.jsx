@@ -1,5 +1,13 @@
 import { Link2, BarChart3 } from 'lucide-react'
 
+function timeAgo(dateStr) {
+  const diff = Date.now() - new Date(dateStr).getTime()
+  if (diff < 60000) return 'just now'
+  if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`
+  if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`
+  return `${Math.floor(diff / 86400000)}d ago`
+}
+
 export default function UrlTable({ urls, onDelete, onRefresh }) {
   const baseUrl = 'http://localhost:3001'
 
@@ -43,6 +51,9 @@ export default function UrlTable({ urls, onDelete, onRefresh }) {
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-slate-300 truncate">
                   {u.original_url}
+                </p>
+                <p className="text-xs text-slate-600 mt-0.5">
+                  {timeAgo(u.created_at)}
                 </p>
               </div>
 
