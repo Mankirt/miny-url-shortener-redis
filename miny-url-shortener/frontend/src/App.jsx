@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Header from './components/Header'
 import ShortenForm from './components/ShortenForm'
 import StatsStrip from './components/StatsStrip'
@@ -9,6 +9,17 @@ import { api } from './api'
 export default function App() {
 
   const [urls, setUrls] = useState([])
+
+  useEffect(() => {
+    loadUrls()
+
+    const interval = setInterval(() => {
+      loadUrls()
+    }, 10000)
+
+    
+    return () => clearInterval(interval)
+  }, []) 
 
   async function loadUrls() {
     try {
