@@ -36,7 +36,7 @@ export default function ArchPanel() {
   const hitFlow = [
     { type: 'node',  label: 'React UI', color: 'bg-blue-950 border-blue-700 text-blue-300' },
     { type: 'arrow', label: '→' },
-    { type: 'node',  label: 'Node.js', color: 'bg-yellow-950 border-yellow-700 text-yellow-900' },
+    { type: 'node',  label: 'Node.js', color: 'bg-yellow-950 border-yellow-700 text-yellow-300' },
     { type: 'arrow', label: '→' },
     { type: 'node',  label: 'Redis', color: 'bg-red-950 border-red-700 text-red-300' },
     { type: 'arrow', label: '-' },
