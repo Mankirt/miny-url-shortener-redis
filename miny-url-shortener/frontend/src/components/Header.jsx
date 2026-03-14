@@ -28,22 +28,26 @@ export default function Header() {
 
         {/* Tech badges — always visible, shows stack at a glance */}
         <div className="flex items-center gap-2 flex-wrap justify-end">
-          <TechBadge
-            label="PostgreSQL"
-            color="text-blue-400 border-blue-800 bg-blue-950/40"
-          />
-          <TechBadge
-            label="Redis"
-            color="text-red-400 border-red-800 bg-red-950/40"
-          />
-          <TechBadge
-            label="Kafka"
-            color="text-emerald-400 border-emerald-800 bg-emerald-950/40"
-          />
-          <TechBadge
-            label="Node.js"
-            color="text-yellow-400 border-yellow-800 bg-yellow-950/40"
-          />
+            <TechBadge
+                label="React"
+                color="text-violet-400 border-violet-500 bg-violet-750/40"
+            />
+            <TechBadge
+                label="Node.js"
+                color="text-yellow-400 border-yellow-800 bg-yellow-950/40"
+            />
+            <TechBadge
+                label="PostgreSQL"
+                color="text-blue-400 border-blue-800 bg-blue-950/40"
+            />
+            <TechBadge
+                label="Redis"
+                color="text-red-400 border-red-800 bg-red-950/40"
+            />
+            <TechBadge
+                label="Kafka"
+                color="text-emerald-400 border-emerald-800 bg-emerald-950/40"
+            />
         </div>
 
       </div>
