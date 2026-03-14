@@ -1,5 +1,6 @@
-import { Link2, BarChart3, Copy, Check } from 'lucide-react'
+import { Link2, BarChart3, Copy, Check, Trash2 } from 'lucide-react'
 import { useState } from 'react'
+import { api } from '../api.js'
 
 function timeAgo(dateStr) {
   const diff = Date.now() - new Date(dateStr).getTime()
@@ -34,6 +35,15 @@ function CopyButton({ text }) {
 
 export default function UrlTable({ urls, onDelete, onRefresh }) {
   const baseUrl = 'http://localhost:3001'
+
+  async function handleDelete(shortCode) {
+    try {
+      await api.deleteUrl(shortCode)
+      onDelete(shortCode)
+    } catch (err) {
+      console.error('Delete failed:', err)
+    }
+  }
 
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
@@ -89,6 +99,14 @@ export default function UrlTable({ urls, onDelete, onRefresh }) {
               <div className="flex items-center gap-1 opacity-0
                               group-hover:opacity-100 transition-opacity">
                 <CopyButton text={`${baseUrl}/${u.short_code}`} />
+                 <button
+                  onClick={() => handleDelete(u.short_code)}
+                  className="p-1.5 rounded-md hover:bg-red-950
+                             text-slate-400 hover:text-red-400 transition-all"
+                  title="Delete"
+                >
+                  <Trash2 size={14} />
+                </button>
               </div>
             </div>
           ))}
