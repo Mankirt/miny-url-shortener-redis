@@ -1,10 +1,24 @@
+import { useState } from 'react'
 import Header from './components/Header'
 import ShortenForm from './components/ShortenForm'
 import StatsStrip from './components/StatsStrip'
 import UrlTable from './components/UrlTable'
 import ArchPanel from './components/ArchPanel'
+import { api } from './api'
 
 export default function App() {
+
+  const [urls, setUrls] = useState([])
+
+  async function loadUrls() {
+    try {
+      const data = await api.getUrls()
+      setUrls(data)
+    } catch (err) {
+      console.error('Could not load URLs:', err)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
 
@@ -12,7 +26,6 @@ export default function App() {
 
       <main className="max-w-4xl mx-auto px-6 py-12">
 
-        {/* Hero section */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1
                           rounded-full bg-violet-950 border border-violet-700
@@ -30,10 +43,10 @@ export default function App() {
             async analytics, and rate limiting.
           </p>
         </div>
-
-        <ShortenForm onSuccess={() => {}} />
-        <StatsStrip urls={[]} />
-        <UrlTable urls={[]} onDelete={() => {}} onRefresh={() => {}} />
+        
+        <ShortenForm onSuccess={loadUrls} />
+        <StatsStrip urls={urls} />
+        <UrlTable urls={urls} onDelete={() => {}} onRefresh={loadUrls} />
         <ArchPanel />
 
       </main>
