@@ -63,6 +63,13 @@ export default function ShortenForm({ onSuccess }) {
                     ) : 'Shorten URL'}
                 </button>
             </div>
+            {/* Error state */}
+            {error && (
+                <div className="mt-3 px-4 py-3 bg-red-950/50 border border-red-800
+                                rounded-xl text-red-300 text-sm">
+                {error}
+                </div>
+            )}
         </div>
     )
 }
