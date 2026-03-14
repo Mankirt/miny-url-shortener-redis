@@ -1,3 +1,18 @@
+function FlowItem({ item }) {
+    if (item.type === 'node') {
+      return (
+        <span className={`px-2 py-1 rounded-md border text-xs font-mono ${item.color}`}>
+          {item.label}
+        </span>
+      )
+    }
+    return (
+      <span className={`text-xs font-mono ${item.labelColor || 'text-slate-600'}`}>
+        {item.label}
+      </span>
+    )
+}
+
 export default function ArchPanel() {
 
   const designPoints = [
