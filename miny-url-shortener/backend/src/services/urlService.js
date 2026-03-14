@@ -30,9 +30,9 @@ export async function createShortUrl(originalUrl, creatorIp) {
 
         //Cache the new short code for faster future lookups
         await cacheUrl(shortCode, originalUrl)
-
+        const baseUrl = process.env.BASE_URL || 'http://localhost:3001'
         return {
-            shortCode, originalUrl, shortUrl: `#{baseUrl}/${shortCode}`
+            shortCode, originalUrl, shortUrl: `${baseUrl}/${shortCode}`
         }
 
     } catch (error) {
