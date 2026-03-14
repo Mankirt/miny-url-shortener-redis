@@ -16,7 +16,7 @@ async function request(path, options = {}) {
 export const api = {
     shorten: (url) => request('/shorten', {
         method: 'POST',
-        body: JSON.strngify({url})
+        body: JSON.stringify({url})
     }),
 
     getUrls: () => request('/urls'),
