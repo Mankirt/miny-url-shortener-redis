@@ -74,22 +74,24 @@ export default function ArchPanel() {
         <span className="hidden min-[900px]:inline">Architecture Flow</span>
         <span className="inline min-[900px]:hidden">Design Decisions</span>
       </h3>
-      <div className="flex flex-col gap-3 items-start mb-6">
-        {/* Row 1 — HIT path */}
-        <div className="flex items-center gap-2">
-          {hitFlow.map((item, i) => (
-            <FlowItem key={i} item={item} />
-          ))}
-        </div>
+      <div className="hidden min-[900px]:block mb-6">
+        <div className="flex flex-col gap-3 items-start">
+            {/* Row 1 — HIT path */}
+            <div className="flex items-center gap-2">
+            {hitFlow.map((item, i) => (
+                <FlowItem key={i} item={item} />
+            ))}
+            </div>
 
-        {/* Row 2 — MISS path */}
-        <div className="flex items-center gap-2 pl-[184px]">
-          {missFlow.map((item, i) => (
-            <FlowItem key={i} item={item} />
-          ))}
-        </div>
+            {/* Row 2 — MISS path */}
+            <div className="flex items-center gap-2 pl-[184px]">
+            {missFlow.map((item, i) => (
+                <FlowItem key={i} item={item} />
+            ))}
+            </div>
 
-      </div>
+        </div>
+      </div>  
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {designPoints.map(point => (
