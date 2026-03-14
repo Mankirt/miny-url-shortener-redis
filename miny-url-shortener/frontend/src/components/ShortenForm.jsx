@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import { api } from '../api.js'
+import { ExternalLink } from 'lucide-react'
 
 export default function ShortenForm({ onSuccess }) {
     const [url, setUrl] = useState('')
@@ -68,6 +69,30 @@ export default function ShortenForm({ onSuccess }) {
                 <div className="mt-3 px-4 py-3 bg-red-950/50 border border-red-800
                                 rounded-xl text-red-300 text-sm">
                 {error}
+                </div>
+            )}
+            {/* Success state */}
+            {result && (
+                <div className="mt-4 px-4 py-4 bg-emerald-950/40 border
+                                border-emerald-800 rounded-xl">
+                    <p className="text-xs text-emerald-400 font-mono mb-2">
+                        Short URL created
+                    </p>
+                    <div className="flex items-center gap-2">
+                        <span className="flex-1 font-mono text-emerald-300
+                                        font-semibold text-sm break-all">
+                        {result.shortUrl}
+                        </span>
+                        <a
+                        href={result.shortUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="p-1.5 rounded-md hover:bg-emerald-900
+                                    text-emerald-400 transition-all"
+                        >
+                        <ExternalLink size={14} />
+                        </a>
+                    </div>
                 </div>
             )}
         </div>
