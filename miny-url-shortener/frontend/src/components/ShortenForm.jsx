@@ -1,6 +1,31 @@
 import {useState} from 'react'
 import { api } from '../api.js'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, Copy, Check } from 'lucide-react'
+
+
+function CopyButton({ text }) {
+    const [copied, setCopied] = useState(false)
+
+    function handleCopy() {
+        navigator.clipboard.writeText(text)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+    }
+
+    return (
+        <button
+        onClick={handleCopy}
+        className="p-1.5 rounded-md hover:bg-slate-700 text-slate-400
+                    hover:text-slate-200 transition-all"
+        title="Copy to clipboard"
+        >
+        {copied
+            ? <Check size={14} className="text-emerald-400" />
+            : <Copy size={14} />
+        }
+        </button>
+    )
+}
 
 export default function ShortenForm({ onSuccess }) {
     const [url, setUrl] = useState('')
@@ -83,6 +108,7 @@ export default function ShortenForm({ onSuccess }) {
                                         font-semibold text-sm break-all">
                         {result.shortUrl}
                         </span>
+                        <CopyButton text={result.shortUrl} />
                         <a
                         href={result.shortUrl}
                         target="_blank"
