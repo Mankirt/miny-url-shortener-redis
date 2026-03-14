@@ -1,9 +1,31 @@
 import {useState} from 'react'
+import { api } from '../api.js'
+
 export default function ShortenForm({ onSuccess }) {
     const [url, setUrl] = useState('')
     const [loading, setLoading] = useState(false)
     const [result, setResult] = useState(null)
-    const [error, setError] = useState('')   
+    const [error, setError] = useState('')
+
+    async function handleShorten() {
+        if (!url.trim()) return
+
+        setError('')
+        setResult(null)
+        setLoading(true)
+
+        try {
+            const data = await api.shorten(url)
+            setResult(data)
+            setUrl('')
+            onSuccess()
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setLoading(false)
+            }
+    }
+    
 
     return (
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 mb-8">
@@ -15,7 +37,9 @@ export default function ShortenForm({ onSuccess }) {
                 <input
                 type="url"
                 value={url}
+                disabled = {loading}
                 onChange={e => setUrl(e.target.value)} 
+                onKeyDown={e => e.key === 'Enter' && handleShorten()}
                 placeholder="https://example.com/very/long/url"
                 className="flex-1 bg-slate-800 border border-slate-700 rounded-xl
                             px-4 py-3 text-sm text-slate-100 placeholder-slate-600
@@ -23,13 +47,20 @@ export default function ShortenForm({ onSuccess }) {
                             focus:border-transparent transition-all"
                 />
                 <button
+                onClick={handleShorten}
                 disabled={loading || !url.trim()}
                 className="px-6 py-3 bg-violet-600 hover:bg-violet-500
                             disabled:bg-slate-700 disabled:text-slate-500
                             text-white font-semibold rounded-xl transition-all
                             text-sm whitespace-nowrap"
                 >
-                Shorten URL
+                { loading ? (
+                        <span className="flex items-center gap-2">
+                        <div className="w-3 h-3 border-2 border-white/30
+                                        border-t-white rounded-full animate-spin" />
+                        Shortening...
+                        </span>
+                    ) : 'Shorten URL'}
                 </button>
             </div>
         </div>
