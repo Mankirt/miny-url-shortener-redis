@@ -71,7 +71,8 @@ export default function ArchPanel() {
   return (
     <div className="mt-8 bg-slate-900/50 border border-slate-800 rounded-2xl p-6">
       <h3 className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-4">
-        Design Decisions
+        <span className="hidden min-[900px]:inline">Architecture Flow</span>
+        <span className="inline min-[900px]:hidden">Design Decisions</span>
       </h3>
       <div className="flex flex-col gap-3 items-start mb-6">
         {/* Row 1 — HIT path */}
