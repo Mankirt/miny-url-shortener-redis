@@ -1,4 +1,4 @@
-import { Link2, Database, Zap, Activity, Server } from 'lucide-react'
+import { Link2 } from 'lucide-react'
 
 function TechBadge({label, color}){
     return (
@@ -19,10 +19,10 @@ export default function Header() {
             <Link2 size={16} className="text-white" />
           </div>
           <span className="font-bold text-lg tracking-tight text-white">
-            Miny - Url Shortener
+            Miny 
           </span>
-          <span className="text-slate-600 text-sm font-mono hidden sm:block">
-            / Miny - Url Shortener
+          <span className="text-slate-500 text-sm font-mono hidden sm:block">
+            - Url Shortener
           </span>
         </div>
 
