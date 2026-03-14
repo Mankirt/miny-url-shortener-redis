@@ -1,4 +1,5 @@
-import { Link2, BarChart3 } from 'lucide-react'
+import { Link2, BarChart3, Copy, Check } from 'lucide-react'
+import { useState } from 'react'
 
 function timeAgo(dateStr) {
   const diff = Date.now() - new Date(dateStr).getTime()
@@ -6,6 +7,29 @@ function timeAgo(dateStr) {
   if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`
   if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`
   return `${Math.floor(diff / 86400000)}d ago`
+}
+
+function CopyButton({ text }) {
+  const [copied, setCopied] = useState(false)
+
+  function handleCopy() {
+    navigator.clipboard.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <button
+      onClick={handleCopy}
+      className="p-1.5 rounded-md hover:bg-slate-700 text-slate-400
+                 hover:text-slate-200 transition-all"
+    >
+      {copied
+        ? <Check size={14} className="text-emerald-400" />
+        : <Copy size={14} />
+      }
+    </button>
+  )
 }
 
 export default function UrlTable({ urls, onDelete, onRefresh }) {
@@ -40,7 +64,7 @@ export default function UrlTable({ urls, onDelete, onRefresh }) {
           {urls.map(u => (
             <div
               key={u.short_code}
-              className="px-6 py-4 flex items-center gap-4 hover:bg-slate-800/40 transition-colors"
+              className="px-6 py-4 flex items-center gap-4 hover:bg-slate-800/40 transition-colors group"
             >
               {/* Short code — fixed width, never shrinks */}
               <div className="font-mono text-sm text-violet-400 font-semibold w-20 shrink-0">
@@ -61,6 +85,10 @@ export default function UrlTable({ urls, onDelete, onRefresh }) {
               <div className="flex items-center gap-1.5 text-xs text-slate-500 w-20 justify-end shrink-0">
                 <BarChart3 size={12} />
                 <span>{u.click_count || 0} clicks</span>
+              </div>
+              <div className="flex items-center gap-1 opacity-0
+                              group-hover:opacity-100 transition-opacity">
+                <CopyButton text={`${baseUrl}/${u.short_code}`} />
               </div>
             </div>
           ))}
