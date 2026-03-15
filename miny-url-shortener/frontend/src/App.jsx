@@ -9,6 +9,8 @@ import { api } from './api'
 export default function App() {
 
   const [urls, setUrls] = useState([])
+  const [initialLoading, setInitialLoading] = useState(true)
+  const [error, setError] = useState(null)   
 
   useEffect(() => {
     loadUrls()
@@ -24,8 +26,12 @@ export default function App() {
     try {
       const data = await api.getUrls()
       setUrls(data)
+      setError(null)
     } catch (err) {
       console.error('Could not load URLs:', err)
+      setError('Could not connect to server.')
+    } finally {
+      setInitialLoading(false)
     }
   }
 
@@ -60,7 +66,29 @@ export default function App() {
         
         <ShortenForm onSuccess={loadUrls} />
         <StatsStrip urls={urls} />
-        <UrlTable urls={urls} onDelete={handleDelete} onRefresh={loadUrls} />
+        {initialLoading ? (
+          <div className="bg-slate-900 border border-slate-800
+                          rounded-2xl py-16 text-center">
+            <div className="w-6 h-6 border-2 border-slate-700
+                            border-t-violet-500 rounded-full
+                            animate-spin mx-auto mb-3" />
+            <p className="text-slate-500 text-sm">Loading URLs...</p>
+          </div>
+        ) : error ? (
+          <div className="bg-slate-900 border border-red-900 rounded-2xl py-16 text-center">
+            <p className="text-red-400 text-sm mb-3">{error}</p>
+            <button
+              onClick={loadUrls}
+              className="text-xs text-slate-500 hover:text-slate-300 transition-colors"
+            >
+              ↻ Try again
+            </button>
+          </div>
+
+        ) :
+         (
+          <UrlTable urls={urls} onDelete={handleDelete} onRefresh={loadUrls} />
+         )}
         <ArchPanel />
 
       </main>
