@@ -17,7 +17,6 @@ export default function App() {
       loadUrls()
     }, 10000)
 
-    
     return () => clearInterval(interval)
   }, []) 
 
@@ -28,6 +27,10 @@ export default function App() {
     } catch (err) {
       console.error('Could not load URLs:', err)
     }
+  }
+
+  function handleDelete(shortCode) {
+    setUrls(prev => prev.filter(u => u.short_code !== shortCode))
   }
 
   return (
@@ -57,7 +60,7 @@ export default function App() {
         
         <ShortenForm onSuccess={loadUrls} />
         <StatsStrip urls={urls} />
-        <UrlTable urls={urls} onDelete={() => {}} onRefresh={loadUrls} />
+        <UrlTable urls={urls} onDelete={handleDelete} onRefresh={loadUrls} />
         <ArchPanel />
 
       </main>
