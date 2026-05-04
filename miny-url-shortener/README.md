@@ -23,6 +23,19 @@ React UI → Node.js API → Redis Cache ──HIT──→ Redirect → Kafka �
 
 ---
 
+## Demo
+
+Shortening a URL and watching real-time analytics update — powered by Kafka's async pipeline.
+
+- 🔗 A long YouTube URL is pasted and shortened — a compact short code is generated instantly
+- 🚀 Clicking **Redirect** opens the original YouTube video — served from Redis cache at sub-millisecond speed
+- 📋 The shortened URL is copied from **Recent URLs**, pasted in a new tab, and redirects to the YouTube video
+- ⏱️ Analytics refresh every 10 seconds — URL count and click stats update on screen as Kafka processes events asynchronously in the background
+
+![Miny Demo](assets/demo.gif)
+
+---
+
 ## Features
 
 - **Base62 Encoding with XOR Scrambling** — Short codes generated from auto-increment DB IDs, XOR-scrambled with a secret key and a deterministically shuffled charset. Sequential IDs produce unpredictable codes. No collision checks needed — IDs are unique by definition.
